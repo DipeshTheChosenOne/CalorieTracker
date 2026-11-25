@@ -60,4 +60,4 @@ calorie-tracker/
 
 ## Deployment
 
-Deployed live on Render: _[link will be added after deploy]_
+Deployed live on Render: https://quickcals.onrender.com
