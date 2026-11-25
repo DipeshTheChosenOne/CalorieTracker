@@ -1,79 +1,296 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CalorieTracker — Track Your Daily Calories</title>
+    <title>QuickCals, Daily Calorie Tracker</title>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("chaiui-theme");
+                if (saved === "light") {
+                    document.documentElement.classList.remove("dark");
+                } else {
+                    document.documentElement.classList.add("dark");
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..600&family=Manrope:wght@200..800&family=Montserrat:wght@400..800&family=Onest:wght@400..700&display=swap"
+        rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <!-- ── Header ─────────────────────────────── -->
-    <header>
-        <h1>🔥 CalorieTracker</h1>
-        <p>Track what you eat. Stay healthy.</p>
-    </header>
+    <div class="page-wrapper">
+        <img
+            src="/static/background.svg"
+            alt=""
+            aria-hidden="true"
+            class="chai-backdrop"
+            fetchpriority="high"
+            decoding="async"
+        />
 
-    <main>
-        <!-- ── Summary Card ───────────────────── -->
-        <section class="summary-card">
-            <div class="summary-item">
-                <span class="summary-number" id="totalCalories">0</span>
-                <span class="summary-label">Calories Today</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-number" id="mealCount">0</span>
-                <span class="summary-label">Meals Logged</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-number" id="remaining">2000</span>
-                <span class="summary-label">Remaining</span>
-            </div>
-        </section>
+        <!-- Sticky transparent header, blurs on scroll -->
+        <header class="site-header" id="siteHeader">
+            <nav class="nav-inner" aria-label="Primary navigation">
+                <a href="/" class="brand-link" aria-label="QuickCals home">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        class="brand-mark"
+                    >
+                        <path d="M12 3c.5 2.5-1.5 4.2-1.5 6.5a3.5 3.5 0 0 0 7 0c0-2.5-2-4.5-2.5-6.5" stroke="#FF7D0C" />
+                        <path d="M5 12h14l-1.4 6.4a2 2 0 0 1-2 1.6H8.4a2 2 0 0 1-2-1.6L5 12Z" />
+                        <path d="M19 13.5a2.5 2.5 0 0 1 0 5" />
+                    </svg>
+                    <span class="brand-wordmark">QuickCals</span>
+                </a>
 
-        <!-- ── Add Meal Form ──────────────────── -->
-        <section class="add-meal">
-            <h2>➕ Add Meal</h2>
-            <form id="mealForm">
-                <div class="form-row">
-                    <input
-                        type="text"
-                        id="foodName"
-                        placeholder="Food name (e.g. Rice, Roti)"
-                        required
-                    />
-                    <input
-                        type="number"
-                        id="calories"
-                        placeholder="Calories"
-                        min="1"
-                        required
-                    />
+                <div class="nav-actions">
+                    <a href="#mealsSection" class="nav-link">Today's log</a>
+                    <button
+                        type="button"
+                        id="themeToggle"
+                        class="theme-switcher"
+                        aria-label="Toggle theme"
+                        title="Toggle theme"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                            class="theme-icon"
+                        >
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                            <path d="M12 3l0 18" />
+                            <path d="M12 9l4.65 -4.65" />
+                            <path d="M12 14.3l7.37 -7.37" />
+                            <path d="M12 19.6l8.85 -8.85" />
+                        </svg>
+                    </button>
                 </div>
-                <div class="form-row">
-                    <select id="mealType">
-                        <option value="breakfast">🌅 Breakfast</option>
-                        <option value="lunch">☀️ Lunch</option>
-                        <option value="dinner">🌙 Dinner</option>
-                        <option value="snack">🍿 Snack</option>
-                    </select>
-                    <button type="submit">Add Meal</button>
+            </nav>
+        </header>
+
+        <main class="container">
+            <!-- Hero -->
+            <section class="hero">
+                <span class="animated-badge">
+                    <span aria-hidden="true" class="animated-badge-glint"></span>
+                    <span class="animated-badge-inner">Daily nutrition tracker</span>
+                </span>
+
+                <h1 class="hero-title">Track your daily calories</h1>
+
+                <p class="hero-lead">
+                    Build steady eating habits with
+                    <span class="highlight">simple meal logging</span> and clear daily totals.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#logSection" id="heroLogBtn" class="btn-solid btn-asym">
+                        Log a meal
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="btn-icon">
+                            <path d="M7 7h10v10" />
+                            <path d="M7 17 17 7" />
+                        </svg>
+                    </a>
+                    <a href="#mealsSection" class="btn-outline btn-asym-mirror">
+                        See today's meals
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="btn-icon">
+                            <path d="m7 6 5 5 5-5" />
+                            <path d="m7 13 5 5 5-5" />
+                        </svg>
+                    </a>
                 </div>
-            </form>
-        </section>
+            </section>
 
-        <!-- ── Meal List ──────────────────────── -->
-        <section class="meal-list">
-            <h2>📋 Today's Meals</h2>
-            <div id="meals">
-                <p class="empty-state">No meals logged yet. Start adding!</p>
+            <!-- Summary strip -->
+            <section class="summary-grid" aria-label="Daily calorie summary">
+                <article class="card-chai summary-card">
+                    <div class="summary-top">
+                        <span class="summary-label">Calories today</span>
+                        <span class="summary-unit">kcal</span>
+                    </div>
+                    <p class="summary-number" id="totalCalories">0</p>
+                    <div class="progress-track" aria-hidden="true">
+                        <div class="progress-fill" id="calorieProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="summary-meta" id="goalMeta">0% of 2,000 kcal goal</p>
+                </article>
+
+                <article class="card-chai summary-card">
+                    <div class="summary-top">
+                        <span class="summary-label">Meals logged</span>
+                        <span class="summary-unit">today</span>
+                    </div>
+                    <p class="summary-number" id="mealCount">0</p>
+                    <p class="summary-meta" id="mealMeta">Ready for your first entry</p>
+                </article>
+
+                <article class="card-chai summary-card">
+                    <div class="summary-top">
+                        <span class="summary-label">Remaining</span>
+                        <span class="summary-unit">target 2,000</span>
+                    </div>
+                    <p class="summary-number" id="remaining">2000</p>
+                    <p class="summary-meta status-text" id="statusText" data-tone="good">Within daily budget</p>
+                </article>
+            </section>
+
+            <!-- Log meal form card -->
+            <section class="section-block" id="logSection">
+                <div class="section-head">
+                    <h2>Log a meal</h2>
+                    <p>
+                        Record each item as you eat so your
+                        <span class="highlight">daily intake</span> stays accurate.
+                    </p>
+                </div>
+
+                <div class="card-chai form-card">
+                    <form id="mealForm" class="meal-form">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="foodName">Food name</label>
+                                <input
+                                    type="text"
+                                    id="foodName"
+                                    class="chai-input"
+                                    placeholder="For example: Roti, Dal, Paneer bowl"
+                                    required
+                                />
+                            </div>
+
+                            <div class="field">
+                                <label for="calories">Calories (kcal)</label>
+                                <input
+                                    type="number"
+                                    id="calories"
+                                    class="chai-input"
+                                    placeholder="250"
+                                    min="1"
+                                    max="10000"
+                                    required
+                                />
+                            </div>
+
+                            <div class="field">
+                                <label for="mealType">Meal type</label>
+                                <select id="mealType" class="chai-select">
+                                    <option value="breakfast">Breakfast</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="snack">Snack</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <p class="form-hint" id="formHint" role="status" aria-live="polite">
+                                Saved directly to your SQLite meal log for today.
+                            </p>
+                            <button type="submit" id="submitMealBtn" class="btn-card-primary">
+                                Add meal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Today's meals listing -->
+            <section class="section-block" id="mealsSection">
+                <div class="section-head">
+                    <h2>Today's meals</h2>
+                    <p>
+                        Filter your entries by meal time or remove an
+                        <span class="highlight">individual item</span> anytime.
+                    </p>
+                </div>
+
+                <div class="toolbar">
+                    <div class="toolbar-meta">
+                        <p class="toolbar-count">
+                            Showing <span id="visibleCount" class="count-strong">0</span>
+                            <span id="visibleNoun">meals</span>
+                        </p>
+                        <span class="toolbar-divider" aria-hidden="true"></span>
+                        <span class="toolbar-date" id="todayDateLabel">Today</span>
+                    </div>
+
+                    <div role="group" aria-label="Filter meals by type" class="segmented" id="mealFilter">
+                        <button type="button" class="seg-btn is-active" data-filter="all" aria-pressed="true">All</button>
+                        <button type="button" class="seg-btn" data-filter="breakfast" aria-pressed="false">Breakfast</button>
+                        <button type="button" class="seg-btn" data-filter="lunch" aria-pressed="false">Lunch</button>
+                        <button type="button" class="seg-btn" data-filter="dinner" aria-pressed="false">Dinner</button>
+                        <button type="button" class="seg-btn" data-filter="snack" aria-pressed="false">Snack</button>
+                    </div>
+                </div>
+
+                <div class="card-chai meals-card">
+                    <div id="meals" class="meals-list">
+                        <p class="empty-state">No meals logged yet. Add your first meal above.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="brand-wordmark">QuickCals</span>
+                    <p class="footer-tagline">Simple calorie tracking built with Flask and SQLite.</p>
+                </div>
+                <p class="footer-copy">BCA 5th Semester Minor Project</p>
             </div>
-        </section>
-    </main>
+        </footer>
+    </div>
 
-    <!-- ── Footer ─────────────────────────────── -->
-    <footer>
-        <p>CalorieTracker &copy; 2026 — BCA Minor Project</p>
-    </footer>
+    <!-- ChaiUI Confirm Dialog for destructive delete -->
+    <div id="confirmOverlay" class="dialog-backdrop" hidden>
+        <div
+            class="dialog-card"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="confirmTitle"
+            aria-describedby="confirmDesc"
+        >
+            <div class="dialog-head">
+                <span class="dialog-warn-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                        <path d="M12 9v4" />
+                        <path d="M12 17h.01" />
+                    </svg>
+                </span>
+                <div>
+                    <h3 id="confirmTitle" class="dialog-title">Remove meal entry?</h3>
+                    <p id="confirmDesc" class="dialog-desc">
+                        This will permanently remove <strong id="confirmFoodName">this item</strong> from today's calorie log.
+                    </p>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" id="cancelDeleteBtn" class="btn-soft">Keep it</button>
+                <button type="button" id="confirmDeleteBtn" class="btn-danger">Delete meal</button>
+            </div>
+        </div>
+    </div>
 
     <script src="/static/script.js"></script>
 </body>
