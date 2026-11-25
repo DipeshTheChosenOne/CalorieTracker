@@ -96,8 +96,10 @@ def get_summary():
     return jsonify({"total_calories": result["total"], "meal_count": count["count"]})
 
 
+# Ensure database table exists when run via Gunicorn in production
+init_db()
+
 # ── Run ────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5001)
