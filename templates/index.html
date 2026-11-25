@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CalorieTracker — Track Your Daily Calories</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <!-- ── Header ─────────────────────────────── -->
+    <header>
+        <h1>🔥 CalorieTracker</h1>
+        <p>Track what you eat. Stay healthy.</p>
+    </header>
+
+    <main>
+        <!-- ── Summary Card ───────────────────── -->
+        <section class="summary-card">
+            <div class="summary-item">
+                <span class="summary-number" id="totalCalories">0</span>
+                <span class="summary-label">Calories Today</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-number" id="mealCount">0</span>
+                <span class="summary-label">Meals Logged</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-number" id="remaining">2000</span>
+                <span class="summary-label">Remaining</span>
+            </div>
+        </section>
+
+        <!-- ── Add Meal Form ──────────────────── -->
+        <section class="add-meal">
+            <h2>➕ Add Meal</h2>
+            <form id="mealForm">
+                <div class="form-row">
+                    <input
+                        type="text"
+                        id="foodName"
+                        placeholder="Food name (e.g. Rice, Roti)"
+                        required
+                    />
+                    <input
+                        type="number"
+                        id="calories"
+                        placeholder="Calories"
+                        min="1"
+                        required
+                    />
+                </div>
+                <div class="form-row">
+                    <select id="mealType">
+                        <option value="breakfast">🌅 Breakfast</option>
+                        <option value="lunch">☀️ Lunch</option>
+                        <option value="dinner">🌙 Dinner</option>
+                        <option value="snack">🍿 Snack</option>
+                    </select>
+                    <button type="submit">Add Meal</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ── Meal List ──────────────────────── -->
+        <section class="meal-list">
+            <h2>📋 Today's Meals</h2>
+            <div id="meals">
+                <p class="empty-state">No meals logged yet. Start adding!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ── Footer ─────────────────────────────── -->
+    <footer>
+        <p>CalorieTracker &copy; 2026 — BCA Minor Project</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

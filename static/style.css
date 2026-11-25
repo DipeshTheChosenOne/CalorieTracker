@@ -1,0 +1,225 @@
+/* ── Reset & Base ────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────── */
+header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    text-align: center;
+    padding: 2rem 1rem;
+    border-bottom: 2px solid #ff6b35;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #ff6b35;
+}
+
+header p {
+    color: #888;
+    margin-top: 0.3rem;
+}
+
+/* ── Main ────────────────────────────────────── */
+main {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+    width: 100%;
+}
+
+/* ── Summary Card ────────────────────────────── */
+.summary-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.summary-item {
+    flex: 1;
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 1.2rem 0.5rem;
+    text-align: center;
+    border: 1px solid #2a2a4a;
+}
+
+.summary-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ff6b35;
+}
+
+.summary-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Add Meal Section ────────────────────────── */
+.add-meal {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #2a2a4a;
+}
+
+.add-meal h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+}
+
+.form-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+input,
+select {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+input:focus,
+select:focus {
+    border-color: #ff6b35;
+}
+
+input::placeholder {
+    color: #555;
+}
+
+button[type="submit"] {
+    padding: 0.7rem 1.5rem;
+    background: #ff6b35;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+button[type="submit"]:hover {
+    background: #e55a2b;
+}
+
+/* ── Meal List ───────────────────────────────── */
+.meal-list {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #2a2a4a;
+}
+
+.meal-list h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+}
+
+.meal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.meal-item:last-child {
+    border-bottom: none;
+}
+
+.meal-info h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+.meal-info span {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.meal-calories {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ff6b35;
+    margin-right: 1rem;
+}
+
+.delete-btn {
+    background: none;
+    border: 1px solid #444;
+    color: #888;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.delete-btn:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.empty-state {
+    text-align: center;
+    color: #555;
+    padding: 2rem 0;
+    font-style: italic;
+}
+
+/* ── Footer ──────────────────────────────────── */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #444;
+    font-size: 0.8rem;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 500px) {
+    .summary-card {
+        flex-direction: column;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+}
