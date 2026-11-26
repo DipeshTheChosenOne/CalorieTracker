@@ -24,7 +24,7 @@
     />
     <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body>
+<body data-daily-goal="{{ daily_goal }}" data-joined-date="{{ joined_date }}">
     <div class="page-wrapper">
         <img
             src="/static/background.svg"
@@ -57,7 +57,10 @@
                 </a>
 
                 <div class="nav-actions">
-                    <a href="#mealsSection" class="nav-link">Today's log</a>
+                    <a href="#historySection" class="nav-link">Daily chart</a>
+                    <a href="#mealsSection" class="nav-link">Meals</a>
+                    <span class="user-pill" title="Signed in as {{ username }}">@{{ username }}</span>
+                    <a href="/logout" class="nav-link logout-link">Sign out</a>
                     <button
                         type="button"
                         id="themeToggle"
@@ -92,14 +95,14 @@
             <section class="hero">
                 <span class="animated-badge">
                     <span aria-hidden="true" class="animated-badge-glint"></span>
-                    <span class="animated-badge-inner">Daily nutrition tracker</span>
+                    <span class="animated-badge-inner">Tracking since {{ joined_date }}</span>
                 </span>
 
                 <h1 class="hero-title">Track your daily calories</h1>
 
                 <p class="hero-lead">
                     Build steady eating habits with
-                    <span class="highlight">simple meal logging</span> and clear daily totals.
+                    <span class="highlight">simple meal logging</span> and a day-by-day calorie chart.
                 </p>
 
                 <div class="hero-actions">
@@ -110,8 +113,8 @@
                             <path d="M7 17 17 7" />
                         </svg>
                     </a>
-                    <a href="#mealsSection" class="btn-outline btn-asym-mirror">
-                        See today's meals
+                    <a href="#historySection" class="btn-outline btn-asym-mirror">
+                        View daily chart
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="btn-icon">
                             <path d="m7 6 5 5 5-5" />
                             <path d="m7 13 5 5 5-5" />
@@ -121,23 +124,23 @@
             </section>
 
             <!-- Summary strip -->
-            <section class="summary-grid" aria-label="Daily calorie summary">
+            <section class="summary-grid" aria-label="Selected day calorie summary">
                 <article class="card-chai summary-card">
                     <div class="summary-top">
-                        <span class="summary-label">Calories today</span>
+                        <span class="summary-label" id="summaryCaloriesLabel">Calories today</span>
                         <span class="summary-unit">kcal</span>
                     </div>
                     <p class="summary-number" id="totalCalories">0</p>
                     <div class="progress-track" aria-hidden="true">
                         <div class="progress-fill" id="calorieProgress" style="width: 0%"></div>
                     </div>
-                    <p class="summary-meta" id="goalMeta">0% of 2,000 kcal goal</p>
+                    <p class="summary-meta" id="goalMeta">0% of {{ daily_goal }} kcal goal</p>
                 </article>
 
                 <article class="card-chai summary-card">
                     <div class="summary-top">
                         <span class="summary-label">Meals logged</span>
-                        <span class="summary-unit">today</span>
+                        <span class="summary-unit" id="selectedDayChip">today</span>
                     </div>
                     <p class="summary-number" id="mealCount">0</p>
                     <p class="summary-meta" id="mealMeta">Ready for your first entry</p>
@@ -146,11 +149,51 @@
                 <article class="card-chai summary-card">
                     <div class="summary-top">
                         <span class="summary-label">Remaining</span>
-                        <span class="summary-unit">target 2,000</span>
+                        <span class="summary-unit">target {{ daily_goal }}</span>
                     </div>
-                    <p class="summary-number" id="remaining">2000</p>
+                    <p class="summary-number" id="remaining">{{ daily_goal }}</p>
                     <p class="summary-meta status-text" id="statusText" data-tone="good">Within daily budget</p>
                 </article>
+            </section>
+
+            <!-- Day-by-day calorie chart -->
+            <section class="section-block" id="historySection">
+                <div class="section-head section-head-row">
+                    <div>
+                        <h2>Your daily calorie chart</h2>
+                        <p>
+                            Every day from your start date appears below, click any bar to inspect
+                            <span class="highlight">that day's meals</span>.
+                        </p>
+                    </div>
+                    <div class="date-picker-wrap">
+                        <label for="selectedDateInput" class="date-label">Selected date</label>
+                        <input type="date" id="selectedDateInput" class="chai-input date-input" />
+                    </div>
+                </div>
+
+                <div class="card-chai chart-card">
+                    <div class="chart-header">
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Active days tracked</span>
+                            <span class="chart-stat-val" id="daysTrackedCount">1</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Daily average</span>
+                            <span class="chart-stat-val" id="avgCalories">0 kcal</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Daily target</span>
+                            <span class="chart-stat-val" id="chartGoalVal">{{ daily_goal }} kcal</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-scroll">
+                        <div id="calorieChart" class="bar-chart" role="img" aria-label="Daily calorie chart"></div>
+                    </div>
+
+                    <div id="historyList" class="history-table-wrap"></div>
+                </div>
             </section>
 
             <!-- Log meal form card -->
@@ -158,7 +201,7 @@
                 <div class="section-head">
                     <h2>Log a meal</h2>
                     <p>
-                        Record each item as you eat so your
+                        Record each item for the selected date so your
                         <span class="highlight">daily intake</span> stays accurate.
                     </p>
                 </div>
@@ -203,7 +246,7 @@
 
                         <div class="form-footer">
                             <p class="form-hint" id="formHint" role="status" aria-live="polite">
-                                Saved directly to your SQLite meal log for today.
+                                Saved directly to your personal SQLite meal log.
                             </p>
                             <button type="submit" id="submitMealBtn" class="btn-card-primary">
                                 Add meal
@@ -213,10 +256,10 @@
                 </div>
             </section>
 
-            <!-- Today's meals listing -->
+            <!-- Selected day's meals listing -->
             <section class="section-block" id="mealsSection">
                 <div class="section-head">
-                    <h2>Today's meals</h2>
+                    <h2 id="mealsSectionTitle">Today's meals</h2>
                     <p>
                         Filter your entries by meal time or remove an
                         <span class="highlight">individual item</span> anytime.
@@ -281,7 +324,7 @@
                 <div>
                     <h3 id="confirmTitle" class="dialog-title">Remove meal entry?</h3>
                     <p id="confirmDesc" class="dialog-desc">
-                        This will permanently remove <strong id="confirmFoodName">this item</strong> from today's calorie log.
+                        This will permanently remove <strong id="confirmFoodName">this item</strong> from your calorie log.
                     </p>
                 </div>
             </div>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if mode == 'signup' %}Create account, QuickCals{% else %}Sign in, QuickCals{% endif %}</title>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("chaiui-theme");
+                if (saved === "light") {
+                    document.documentElement.classList.remove("dark");
+                } else {
+                    document.documentElement.classList.add("dark");
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..600&family=Manrope:wght@200..800&family=Montserrat:wght@400..800&family=Onest:wght@400..700&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="page-wrapper">
+        <img
+            src="/static/background.svg"
+            alt=""
+            aria-hidden="true"
+            class="chai-backdrop"
+            fetchpriority="high"
+            decoding="async"
+        />
+
+        <header class="site-header" id="siteHeader">
+            <nav class="nav-inner" aria-label="Primary navigation">
+                <a href="/" class="brand-link" aria-label="QuickCals home">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        class="brand-mark"
+                    >
+                        <path d="M12 3c.5 2.5-1.5 4.2-1.5 6.5a3.5 3.5 0 0 0 7 0c0-2.5-2-4.5-2.5-6.5" stroke="#FF7D0C" />
+                        <path d="M5 12h14l-1.4 6.4a2 2 0 0 1-2 1.6H8.4a2 2 0 0 1-2-1.6L5 12Z" />
+                        <path d="M19 13.5a2.5 2.5 0 0 1 0 5" />
+                    </svg>
+                    <span class="brand-wordmark">QuickCals</span>
+                </a>
+
+                <div class="nav-actions">
+                    <button
+                        type="button"
+                        id="themeToggle"
+                        class="theme-switcher"
+                        aria-label="Toggle theme"
+                        title="Toggle theme"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                            class="theme-icon"
+                        >
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                            <path d="M12 3l0 18" />
+                            <path d="M12 9l4.65 -4.65" />
+                            <path d="M12 14.3l7.37 -7.37" />
+                            <path d="M12 19.6l8.85 -8.85" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container auth-container">
+            <div class="auth-shell">
+                <div class="auth-intro">
+                    <span class="animated-badge">
+                        <span aria-hidden="true" class="animated-badge-glint"></span>
+                        <span class="animated-badge-inner">Personal calorie log</span>
+                    </span>
+
+                    <h1 class="auth-title">
+                        {% if mode == 'signup' %}Create your account{% else %}Welcome back{% endif %}
+                    </h1>
+                    <p class="auth-lead">
+                        {% if mode == 'signup' %}
+                            Start tracking your meals and view your
+                            <span class="highlight">daily calorie chart</span> from day one.
+                        {% else %}
+                            Sign in to log today's meals and review your
+                            <span class="highlight">day-to-day progress</span> anytime.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="card-chai auth-card">
+                    <div role="tablist" aria-label="Authentication mode" class="segmented auth-tabs">
+                        <a
+                            href="/login"
+                            role="tab"
+                            aria-selected="{% if mode == 'login' %}true{% else %}false{% endif %}"
+                            class="seg-btn auth-tab {% if mode == 'login' %}is-active{% endif %}"
+                        >
+                            Sign in
+                        </a>
+                        <a
+                            href="/signup"
+                            role="tab"
+                            aria-selected="{% if mode == 'signup' %}true{% else %}false{% endif %}"
+                            class="seg-btn auth-tab {% if mode == 'signup' %}is-active{% endif %}"
+                        >
+                            Create account
+                        </a>
+                    </div>
+
+                    {% if error %}
+                    <div class="auth-alert" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="{% if mode == 'signup' %}/signup{% else %}/login{% endif %}" class="auth-form">
+                        <div class="field">
+                            <label for="username">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="chai-input"
+                                placeholder="e.g. dipesh"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="24"
+                                required
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="chai-input"
+                                placeholder="At least 4 characters"
+                                autocomplete="{% if mode == 'signup' %}new-password{% else %}current-password{% endif %}"
+                                minlength="4"
+                                required
+                            />
+                        </div>
+
+                        {% if mode == 'signup' %}
+                        <div class="field">
+                            <label for="daily_goal">Daily calorie target (kcal)</label>
+                            <input
+                                type="number"
+                                id="daily_goal"
+                                name="daily_goal"
+                                class="chai-input"
+                                value="2000"
+                                min="500"
+                                max="10000"
+                                required
+                            />
+                        </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn-solid btn-asym auth-submit">
+                            {% if mode == 'signup' %}Create account{% else %}Sign in{% endif %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="btn-icon">
+                                <path d="M7 7h10v10" />
+                                <path d="M7 17 17 7" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="brand-wordmark">QuickCals</span>
+                    <p class="footer-tagline">Simple calorie tracking built with Flask and SQLite.</p>
+                </div>
+                <p class="footer-copy">BCA 5th Semester Minor Project</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+            var toggleBtn = document.getElementById("themeToggle");
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", function () {
+                    var isDark = document.documentElement.classList.toggle("dark");
+                    try {
+                        localStorage.setItem("chaiui-theme", isDark ? "dark" : "light");
+                    } catch (e) {}
+                });
+            }
+            var header = document.getElementById("siteHeader");
+            if (header) {
+                var onScroll = function () {
+                    header.classList.toggle("is-scrolled", window.scrollY > 0);
+                };
+                onScroll();
+                window.addEventListener("scroll", onScroll, { passive: true });
+            }
+        })();
+    </script>
+</body>
+</html>
