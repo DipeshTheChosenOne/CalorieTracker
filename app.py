@@ -57,13 +57,17 @@ def current_user():
         (uid,),
     ).fetchone()
     conn.close()
+    if not user:
+        # User session was orphaned or database was reset; clear invalid session
+        session.clear()
+        return None
     return user
 
 
 def login_required_api(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        if not session.get("user_id"):
+        if not current_user():
             return jsonify({"error": "Authentication required"}), 401
         return fn(*args, **kwargs)
     return wrapper
@@ -73,7 +77,7 @@ def login_required_api(fn):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if session.get("user_id"):
+    if current_user():
         return redirect(url_for("index"))
 
     error = None
@@ -98,7 +102,7 @@ def login():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if session.get("user_id"):
+    if current_user():
         return redirect(url_for("index"))
 
     error = None
