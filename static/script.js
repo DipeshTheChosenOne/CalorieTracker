@@ -134,11 +134,13 @@ document.getElementById("mealForm").addEventListener("submit", async (e) => {
 
   const foodNameEl = document.getElementById("foodName");
   const caloriesEl = document.getElementById("calories");
+  const proteinEl = document.getElementById("protein");
   const mealTypeEl = document.getElementById("mealType");
   const hintEl = document.getElementById("formHint");
 
   const foodName = foodNameEl.value.trim();
   const calories = parseInt(caloriesEl.value, 10);
+  const protein = parseInt(proteinEl ? proteinEl.value : "0", 10) || 0;
   const mealType = mealTypeEl.value;
 
   if (!foodName || !calories || calories < 1) {
@@ -154,6 +156,7 @@ document.getElementById("mealForm").addEventListener("submit", async (e) => {
       body: JSON.stringify({
         food_name: foodName,
         calories: calories,
+        protein: Math.max(0, protein),
         meal_type: mealType,
         date: selectedDate,
       }),
@@ -166,7 +169,7 @@ document.getElementById("mealForm").addEventListener("submit", async (e) => {
 
     if (res.ok) {
       document.getElementById("mealForm").reset();
-      hintEl.textContent = `Added "${foodName}" (${calories} kcal) for ${formatReadableDate(selectedDate)}.`;
+      hintEl.textContent = `Added "${foodName}" (${calories} kcal, ${Math.max(0, protein)}g protein) for ${formatReadableDate(selectedDate)}.`;
       hintEl.className = "form-hint is-success";
       await refreshAllData();
     } else {
@@ -235,6 +238,10 @@ function renderMeals() {
     cals.className = "meal-calories";
     cals.textContent = `${meal.calories} kcal`;
 
+    const prot = document.createElement("span");
+    prot.className = "meal-protein";
+    prot.textContent = `${meal.protein || 0}g protein`;
+
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.className = "icon-btn-delete";
@@ -249,6 +256,7 @@ function renderMeals() {
     `;
     delBtn.addEventListener("click", () => openConfirmDialog(meal));
 
+    right.appendChild(prot);
     right.appendChild(cals);
     right.appendChild(delBtn);
 
@@ -267,12 +275,15 @@ async function loadSummary() {
   const data = await res.json();
 
   const total = data.total_calories || 0;
+  const totalProtein = data.total_protein || 0;
   const count = data.meal_count || 0;
   const goal = data.daily_goal || DAILY_GOAL;
   const remaining = Math.max(0, goal - total);
   const pct = Math.min(100, Math.round((total / goal) * 100));
 
   document.getElementById("totalCalories").textContent = total.toLocaleString();
+  const protEl = document.getElementById("totalProtein");
+  if (protEl) protEl.textContent = `${totalProtein.toLocaleString()}g`;
   document.getElementById("mealCount").textContent = count;
   document.getElementById("remaining").textContent = remaining.toLocaleString();
   document.getElementById("calorieProgress").style.width = `${pct}%`;

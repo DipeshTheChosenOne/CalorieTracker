@@ -139,6 +139,15 @@
 
                 <article class="card-chai summary-card">
                     <div class="summary-top">
+                        <span class="summary-label">Protein today</span>
+                        <span class="summary-unit">grams</span>
+                    </div>
+                    <p class="summary-number" id="totalProtein">0g</p>
+                    <p class="summary-meta" id="proteinMeta">Total protein intake</p>
+                </article>
+
+                <article class="card-chai summary-card">
+                    <div class="summary-top">
                         <span class="summary-label">Meals logged</span>
                         <span class="summary-unit" id="selectedDayChip">today</span>
                     </div>
@@ -154,46 +163,6 @@
                     <p class="summary-number" id="remaining">{{ daily_goal }}</p>
                     <p class="summary-meta status-text" id="statusText" data-tone="good">Within daily budget</p>
                 </article>
-            </section>
-
-            <!-- Day-by-day calorie chart -->
-            <section class="section-block" id="historySection">
-                <div class="section-head section-head-row">
-                    <div>
-                        <h2>Your daily calorie chart</h2>
-                        <p>
-                            Every day from your start date appears below, click any bar to inspect
-                            <span class="highlight">that day's meals</span>.
-                        </p>
-                    </div>
-                    <div class="date-picker-wrap">
-                        <label for="selectedDateInput" class="date-label">Selected date</label>
-                        <input type="date" id="selectedDateInput" class="chai-input date-input" />
-                    </div>
-                </div>
-
-                <div class="card-chai chart-card">
-                    <div class="chart-header">
-                        <div class="chart-stat">
-                            <span class="chart-stat-label">Active days tracked</span>
-                            <span class="chart-stat-val" id="daysTrackedCount">1</span>
-                        </div>
-                        <div class="chart-stat">
-                            <span class="chart-stat-label">Daily average</span>
-                            <span class="chart-stat-val" id="avgCalories">0 kcal</span>
-                        </div>
-                        <div class="chart-stat">
-                            <span class="chart-stat-label">Daily target</span>
-                            <span class="chart-stat-val" id="chartGoalVal">{{ daily_goal }} kcal</span>
-                        </div>
-                    </div>
-
-                    <div class="chart-scroll">
-                        <div id="calorieChart" class="bar-chart" role="img" aria-label="Daily calorie chart"></div>
-                    </div>
-
-                    <div id="historyList" class="history-table-wrap"></div>
-                </div>
             </section>
 
             <!-- Log meal form card -->
@@ -234,6 +203,18 @@
                             </div>
 
                             <div class="field">
+                                <label for="protein">Protein (g)</label>
+                                <input
+                                    type="number"
+                                    id="protein"
+                                    class="chai-input"
+                                    placeholder="0"
+                                    min="0"
+                                    max="1000"
+                                />
+                            </div>
+
+                            <div class="field">
                                 <label for="mealType">Meal type</label>
                                 <select id="mealType" class="chai-select">
                                     <option value="breakfast">Breakfast</option>
@@ -253,6 +234,46 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </section>
+
+            <!-- Day-by-day calorie chart -->
+            <section class="section-block" id="historySection">
+                <div class="section-head section-head-row">
+                    <div>
+                        <h2>Your daily calorie chart</h2>
+                        <p>
+                            Every day from your start date appears below, click any bar to inspect
+                            <span class="highlight">that day's meals</span>.
+                        </p>
+                    </div>
+                    <div class="date-picker-wrap">
+                        <label for="selectedDateInput" class="date-label">Selected date</label>
+                        <input type="date" id="selectedDateInput" class="chai-input date-input" />
+                    </div>
+                </div>
+
+                <div class="card-chai chart-card">
+                    <div class="chart-header">
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Active days tracked</span>
+                            <span class="chart-stat-val" id="daysTrackedCount">1</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Daily average</span>
+                            <span class="chart-stat-val" id="avgCalories">0 kcal</span>
+                        </div>
+                        <div class="chart-stat">
+                            <span class="chart-stat-label">Daily target</span>
+                            <span class="chart-stat-val" id="chartGoalVal">{{ daily_goal }} kcal</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-scroll">
+                        <div id="calorieChart" class="bar-chart" role="img" aria-label="Daily calorie chart"></div>
+                    </div>
+
+                    <div id="historyList" class="history-table-wrap"></div>
                 </div>
             </section>
 

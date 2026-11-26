@@ -33,15 +33,18 @@ def init_db():
             user_id INTEGER NOT NULL DEFAULT 0,
             food_name TEXT NOT NULL,
             calories INTEGER NOT NULL,
+            protein INTEGER NOT NULL DEFAULT 0,
             meal_type TEXT NOT NULL,
             date TEXT NOT NULL
         )
     """)
 
-    # Migrate older meals table if user_id column was missing
+    # Migrate older meals table if user_id or protein column was missing
     cols = [row["name"] for row in conn.execute("PRAGMA table_info(meals)").fetchall()]
     if "user_id" not in cols:
         conn.execute("ALTER TABLE meals ADD COLUMN user_id INTEGER NOT NULL DEFAULT 0")
+    if "protein" not in cols:
+        conn.execute("ALTER TABLE meals ADD COLUMN protein INTEGER NOT NULL DEFAULT 0")
 
     conn.commit()
     conn.close()
@@ -189,6 +192,7 @@ def add_meal():
     data = request.get_json() or {}
     food_name = str(data.get("food_name", "")).strip()
     calories = data.get("calories", 0)
+    protein_raw = data.get("protein", 0)
     meal_type = str(data.get("meal_type", "snack")).strip().lower()
     target_date = str(data.get("date") or date.today().isoformat()).strip()
 
@@ -202,14 +206,19 @@ def add_meal():
     except (TypeError, ValueError):
         return jsonify({"error": "Calories must be a positive number"}), 400
 
+    try:
+        protein_int = max(0, int(protein_raw or 0))
+    except (TypeError, ValueError):
+        protein_int = 0
+
     if meal_type not in ("breakfast", "lunch", "dinner", "snack"):
         meal_type = "snack"
 
     uid = session["user_id"]
     conn = get_db()
     conn.execute(
-        "INSERT INTO meals (user_id, food_name, calories, meal_type, date) VALUES (?, ?, ?, ?, ?)",
-        (uid, food_name, cal_int, meal_type, target_date),
+        "INSERT INTO meals (user_id, food_name, calories, protein, meal_type, date) VALUES (?, ?, ?, ?, ?, ?)",
+        (uid, food_name, cal_int, protein_int, meal_type, target_date),
     )
     conn.commit()
     conn.close()
@@ -236,7 +245,7 @@ def get_summary():
     uid = session["user_id"]
     conn = get_db()
     result = conn.execute(
-        "SELECT COALESCE(SUM(calories), 0) as total FROM meals WHERE user_id = ? AND date = ?",
+        "SELECT COALESCE(SUM(calories), 0) as total, COALESCE(SUM(protein), 0) as total_protein FROM meals WHERE user_id = ? AND date = ?",
         (uid, target_date),
     ).fetchone()
     count = conn.execute(
@@ -249,6 +258,7 @@ def get_summary():
     conn.close()
     return jsonify({
         "total_calories": result["total"],
+        "total_protein": result["total_protein"],
         "meal_count": count["count"],
         "daily_goal": user["daily_goal"] if user else 2000,
         "date": target_date,

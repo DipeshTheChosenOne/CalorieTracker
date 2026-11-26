@@ -407,7 +407,7 @@ body {
 /* Summary cards */
 .summary-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25rem;
 }
 
@@ -732,7 +732,7 @@ body {
 
 .form-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
@@ -966,6 +966,13 @@ body {
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     color: var(--foreground);
+}
+
+.meal-protein {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
 }
 
 .icon-btn-delete {
@@ -1256,14 +1263,23 @@ body {
     }
 }
 
+@media (max-width: 900px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
-    .summary-grid,
     .form-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 560px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
     .nav-link:not(.logout-link) {
         display: none;
     }
