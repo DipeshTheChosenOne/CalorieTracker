@@ -43,39 +43,39 @@
 }
 
 .dark {
-    --background: #703B3B;
-    --foreground: #ffffff;
-    --card: #582c2c;
-    --card-foreground: #ffffff;
-    --primary: #ffffff;
-    --primary-foreground: #703B3B;
-    --secondary: rgb(255 255 255 / 0.14);
-    --secondary-foreground: #ffffff;
-    --muted: rgb(255 255 255 / 0.14);
-    --muted-foreground: rgb(255 255 255 / 0.85);
-    --border: rgb(255 255 255 / 0.2);
-    --input-bg: rgb(35 15 15 / 0.45);
-    --input-border: rgb(255 255 255 / 0.25);
-    --input-focus: rgb(255 255 255 / 0.55);
-    --ring: rgb(255 255 255 / 0.45);
-    --brand: #ffffff;
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --border: rgb(255 255 255 / 10%);
+    --input-bg: rgb(0 0 0 / 0.5);
+    --input-border: #262626;
+    --input-focus: #404040;
+    --ring: oklch(0.556 0 0);
+    --brand: oklch(75% 0.183 55.934);
     --destructive: #ef4444;
     --destructive-hover: #dc2626;
 
-    --highlight: #fff3e0;
-    --card-edge: rgb(255 255 255 / 0.22);
-    --card-edge-hover: rgb(255 255 255 / 0.42);
-    --card-fill: rgb(42 18 18 / 0.35);
-    --badge-bg: #582c2c;
-    --badge-text: #ffffff;
-    --seg-active-bg: rgb(255 255 255 / 0.22);
-    --seg-active-text: #ffffff;
-    --seg-hover-bg: rgb(255 255 255 / 0.12);
-    --seg-hover-text: #ffffff;
-    --status-good: #bbf7d0;
-    --status-warn: #fef08a;
-    --status-over: #fecaca;
-    --header-scrolled: rgb(112 59 59 / 0.85);
+    --highlight: oklch(0.954 0.038 75.164); /* orange-100 */
+    --card-edge: rgb(255 247 237 / 0.15);   /* orange-50/15 */
+    --card-edge-hover: rgb(255 247 237 / 0.3);
+    --card-fill: rgb(0 0 0 / 0.14);
+    --badge-bg: #1c1917;
+    --badge-text: #f5f5f5;
+    --seg-active-bg: rgb(124 45 18 / 0.4);
+    --seg-active-text: #ffedd5;
+    --seg-hover-bg: rgb(124 45 18 / 0.2);
+    --seg-hover-text: #ffedd5;
+    --status-good: #4ade80;
+    --status-warn: #facc15;
+    --status-over: #f87171;
+    --header-scrolled: rgb(10 10 10 / 0.65);
 }
 
 /* Base */
@@ -354,11 +354,11 @@ body {
 
 .dark .btn-solid {
     background-color: #ffffff;
-    color: #703B3B;
+    color: #0a0a0a;
 }
 
 .dark .btn-solid:hover {
-    background-color: #f3e8e8;
+    background-color: #e5e5e5;
 }
 
 .btn-outline {
@@ -381,7 +381,7 @@ body {
 }
 
 .dark .btn-outline:hover {
-    background-color: rgb(255 255 255 / 0.12);
+    background-color: rgb(0 0 0 / 0.9);
 }
 
 .btn-icon {
